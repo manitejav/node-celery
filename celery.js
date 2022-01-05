@@ -181,6 +181,10 @@ function RedisBackend(conf) {
 }
 util.inherits(RedisBackend, events.EventEmitter);
 
+RedisBackend.prototype.clearBackendResult = function() {
+    this.results={};
+}
+
 function Client(conf) {
     var self = this;
     self.ready = false;
@@ -268,6 +272,12 @@ Client.prototype.call = function(name /*[args], [kwargs], [options], [callback]*
     }
     return result;
 };
+
+client.prototype.clearBackendResult = function() {
+    if (self.conf.backend_type === 'redis'){
+        this.backend.clearBackendResult();
+    }
+}
 
 function Task(client, name, options, exchange) {
     var self = this;
